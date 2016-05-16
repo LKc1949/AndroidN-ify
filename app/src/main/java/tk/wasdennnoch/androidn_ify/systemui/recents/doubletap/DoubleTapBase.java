@@ -1,4 +1,4 @@
-package tk.wasdennnoch.androidn_ify.recents.doubletap;
+package tk.wasdennnoch.androidn_ify.systemui.recents.doubletap;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -12,10 +12,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import de.robv.android.xposed.XSharedPreferences;
 import tk.wasdennnoch.androidn_ify.R;
 import tk.wasdennnoch.androidn_ify.XposedHook;
 import tk.wasdennnoch.androidn_ify.ui.SettingsActivity;
+import tk.wasdennnoch.androidn_ify.utils.ConfigUtils;
 import tk.wasdennnoch.androidn_ify.utils.ResourceUtils;
 
 public class DoubleTapBase {
@@ -34,21 +34,24 @@ public class DoubleTapBase {
                         mDoubletapSpeed = intent.getIntExtra(SettingsActivity.EXTRA_RECENTS_DOUBLE_TAP_SPEED, 180);
                     break;
                 case SettingsActivity.ACTION_GENERAL:
-                    if (intent.hasExtra(SettingsActivity.EXTRA_GENERAL_DEBUG_LOG))
+                    if (intent.hasExtra(SettingsActivity.EXTRA_GENERAL_DEBUG_LOG)) {
                         XposedHook.debug = intent.getBooleanExtra(SettingsActivity.EXTRA_GENERAL_DEBUG_LOG, false);
+                        XposedHook.logI(TAG, "Debug log " + (XposedHook.debug ? "enabled" : "disabled"));
+                    }
                     break;
             }
         }
     };
 
-    protected static void loadPrefDoubleTapSpeed(XSharedPreferences prefs) {
-        mDoubletapSpeed = prefs.getInt("double_tap_speed", 180);
+    protected static void loadPrefDoubleTapSpeed() {
+        mDoubletapSpeed = ConfigUtils.recents().double_tap_speed;
     }
 
-    protected static void registerReceiver(final Context context) {
+    protected static void registerReceiver(Context context, boolean includeDebug) {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SettingsActivity.ACTION_RECENTS_CHANGED);
-        intentFilter.addAction(SettingsActivity.ACTION_GENERAL);
+        if (includeDebug)
+            intentFilter.addAction(SettingsActivity.ACTION_GENERAL);
         context.registerReceiver(sBroadcastReceiver, intentFilter);
     }
 

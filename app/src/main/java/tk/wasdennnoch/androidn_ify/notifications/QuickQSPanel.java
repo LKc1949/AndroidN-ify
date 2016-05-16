@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import de.robv.android.xposed.XposedHelpers;
 import tk.wasdennnoch.androidn_ify.R;
 import tk.wasdennnoch.androidn_ify.XposedHook;
+import tk.wasdennnoch.androidn_ify.utils.ConfigUtils;
 import tk.wasdennnoch.androidn_ify.utils.ResourceUtils;
 
 public class QuickQSPanel extends LinearLayout {
@@ -28,8 +29,10 @@ public class QuickQSPanel extends LinearLayout {
 
     public QuickQSPanel(Context context) {
         super(context);
+        ConfigUtils config = ConfigUtils.getInstance();
+        config.reload();
         res = ResourceUtils.getInstance(context);
-        mMaxTiles = 5;
+        mMaxTiles = config.header.qs_tiles_count;
         setOrientation(VERTICAL);
         setPadding(0, res.getDimensionPixelSize(R.dimen.qs_quick_panel_padding_top), 0, res.getDimensionPixelSize(R.dimen.qs_quick_panel_padding_bottom));
         mTileLayout = new HeaderTileLayout(context);
@@ -48,11 +51,26 @@ public class QuickQSPanel extends LinearLayout {
         }
     }
 
-    public void drawTile(Object tilerecord, Object state) {
-        int i = mRecords.indexOf(tilerecord);
-        if (i > -1) {
-            XposedHelpers.callMethod(mTileViews.get(i), "onStateChanged", state);
-            XposedHook.logD(TAG, "drawTile #" + i); // Spam
+    public void handleStateChanged(Object qstile, Object state) {
+        for (int i = 0; i < mRecords.size(); i++) {
+            Object tilerecord = mRecords.get(i);
+            Object tile = XposedHelpers.getObjectField(tilerecord, "tile");
+            if (tile == qstile) {
+                if (i >= mTileViews.size()) {
+                    XposedHook.logD(TAG, "handleStateChanged; tilerecord index greater than or equals to tileViews size; index :" + i + "; views: " + mTileViews.size());
+                    return;
+                }
+                ViewGroup tileView = mTileViews.get(i);
+                XposedHelpers.callMethod(tileView, "onStateChanged", state);
+                XposedHook.logD(TAG, "handleStateChanged #" + i); // Spam
+                /*View iconView = (View) XposedHelpers.getObjectField(tileView, "mIcon");
+                if (iconView instanceof ImageView) {
+                    Drawable icon = ((ImageView) iconView).getDrawable();
+                    if (icon instanceof Animatable) {
+                        ((Animatable) icon).start();
+                    }
+                }*/
+            }
         }
     }
 

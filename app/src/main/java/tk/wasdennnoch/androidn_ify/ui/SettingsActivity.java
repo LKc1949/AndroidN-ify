@@ -9,8 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import tk.wasdennnoch.androidn_ify.R;
+import tk.wasdennnoch.androidn_ify.utils.UpdateUtils;
 
 public class SettingsActivity extends Activity {
 
@@ -49,16 +54,26 @@ public class SettingsActivity extends Activity {
     }
 
 
-    public static class Fragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class Fragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, UpdateUtils.UpdateListener {
 
+        @SuppressLint("CommitPrefEdits")
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             //noinspection deprecation
             getPreferenceManager().setSharedPreferencesMode(Context.MODE_WORLD_READABLE);
             addPreferencesFromResource(R.xml.preferences);
+            SharedPreferences sharedPreferences = getPreferenceManager().getSharedPreferences();
+            if (UpdateUtils.isEnabled(getActivity())) {
+                if (sharedPreferences.getBoolean("check_for_updates", true))
+                    UpdateUtils.check(getActivity(), this);
+            } else {
+                PreferenceCategory appCategory = (PreferenceCategory) findPreference("settings_app");
+                Preference updatePref = getPreferenceScreen().findPreference("check_for_updates");
+                appCategory.removePreference(updatePref);
+            }
             // SELinux test, see XposedHook
-            getPreferenceManager().getSharedPreferences().edit().putBoolean("can_read_prefs", true).commit();
+            sharedPreferences.edit().putBoolean("can_read_prefs", true).commit();
         }
 
         @Override
@@ -72,6 +87,24 @@ public class SettingsActivity extends Activity {
                     sendUpdateBroadcast(prefs, key);
                     break;
             }
+        }
+
+        @Override
+        public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+            super.onPreferenceTreeClick(preferenceScreen, preference);
+            if (preference instanceof PreferenceScreen) {
+                PreferenceScreen screen = (PreferenceScreen) preference;
+                switch (preference.getKey()) {
+                    case "settings_recents":
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                            Preference p = screen.findPreference("enable_recents_navigation");
+                            p.setEnabled(false);
+                            p.setSummary(getString(R.string.requires_android_version, "Marshmallow"));
+                        }
+                        break;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -112,6 +145,17 @@ public class SettingsActivity extends Activity {
             }
         }
 
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onFinish(UpdateUtils.UpdateData updateData) {
+            Context mContext = getActivity();
+            if (updateData.getNumber() > mContext.getResources().getInteger(R.integer.version) && updateData.hasArtifact())
+                UpdateUtils.showNotification(updateData, mContext);
+        }
     }
 
     @Override
