@@ -6,14 +6,15 @@ import android.os.Build;
 import java.util.List;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import tk.wasdennnoch.androidn_ify.XposedHook;
 import tk.wasdennnoch.androidn_ify.settings.summaries.SummaryTweaks;
-import tk.wasdennnoch.androidn_ify.utils.ConfigUtils;
 
 public class SettingsHooks {
 
     private static final String TAG = "SettingsHooks";
+    private static XSharedPreferences sPrefs;
 
     /*private static XC_MethodHook onCreateHook = new XC_MethodHook() {
         @Override
@@ -24,15 +25,15 @@ public class SettingsHooks {
     private static XC_MethodHook loadCategoriesFromResourceHook = new XC_MethodHook() {
         @Override
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-            SummaryTweaks.afterLoadCategoriesFromResource(param);
+            SummaryTweaks.afterLoadCategoriesFromResource(param, sPrefs);
         }
     };
 
-    public static void hook(ClassLoader classLoader) {
+    public static void hook(ClassLoader classLoader, XSharedPreferences prefs) {
         try {
-            ConfigUtils config = ConfigUtils.getInstance();
-            config.reload();
-            if (config.settings.enable_summaries) {
+            sPrefs = prefs;
+            prefs.reload();
+            if (prefs.getBoolean("enable_settings_tweaks", true)) {
 
                 Class<?> classSettingsActivity = XposedHelpers.findClass("com.android.settings.SettingsActivity", classLoader);
 

@@ -8,4 +8,8 @@ public class RomTweaks {
         DeviceTweaks.hookDisplayTile(tile, context);
     }
 
+    public static void hookNotificationManagerTile(Object tile, Context context) {
+        DeviceTweaks.hookNotificationTile(tile, context);
+    }
+
 }

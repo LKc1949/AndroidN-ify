@@ -1,4 +1,4 @@
-package tk.wasdennnoch.androidn_ify.systemui.recents.doubletap;
+package tk.wasdennnoch.androidn_ify.recents.doubletap;
 
 import android.content.Context;
 import android.hardware.input.InputManager;
@@ -10,9 +10,9 @@ import android.view.KeyEvent;
 import android.view.WindowManagerPolicy;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import tk.wasdennnoch.androidn_ify.XposedHook;
-import tk.wasdennnoch.androidn_ify.utils.ConfigUtils;
 
 public class DoubleTapHwKeys extends DoubleTapBase {
 
@@ -45,7 +45,7 @@ public class DoubleTapHwKeys extends DoubleTapBase {
             mContext = (Context) XposedHelpers.getObjectField(mPhoneWindowManager, "mContext");
             mHandler = (Handler) XposedHelpers.getObjectField(mPhoneWindowManager, "mHandler");
             // No need to unregister this because the system process will last "forever"
-            registerReceiver(mContext, true);
+            registerReceiver(mContext);
         }
     };
     private static XC_MethodHook interceptKeyBeforeDispatchingHook = new XC_MethodHook() {
@@ -81,17 +81,16 @@ public class DoubleTapHwKeys extends DoubleTapBase {
         }
     };
 
-    public static void hook(ClassLoader classLoader) {
+    public static void hook(ClassLoader classLoader, XSharedPreferences prefs) {
         try {
 
             Class<?> classPhoneWindowManager = XposedHelpers.findClass(CLASS_PHONE_WINDOW_MANAGER, classLoader);
 
             XposedHelpers.findAndHookMethod(classPhoneWindowManager, "init", Context.class, IWindowManager.class, WindowManagerPolicy.WindowManagerFuncs.class, initHook);
 
-            ConfigUtils config = ConfigUtils.getInstance();
-            config.reload();
-            loadPrefDoubleTapSpeed();
-            if (config.recents.double_tap) {
+            prefs.reload();
+            loadPrefDoubleTapSpeed(prefs);
+            if (prefs.getBoolean("enable_recents_double_tap", true)) {
 
                 XposedHelpers.findAndHookMethod(classPhoneWindowManager, "interceptKeyBeforeDispatching", WindowManagerPolicy.WindowState.class, KeyEvent.class, int.class, interceptKeyBeforeDispatchingHook);
 

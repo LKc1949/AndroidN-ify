@@ -38,6 +38,10 @@ public class DeviceTweaks {
         XposedHelpers.setObjectField(tile, "summary", summary);
     }
 
+    public static void hookNotificationTile(Object tile, Context context) {
+        hookApplicationTile(tile, context);
+    }
+
     public static void hookSoundTile(Object tile, Context context) {
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_RING);

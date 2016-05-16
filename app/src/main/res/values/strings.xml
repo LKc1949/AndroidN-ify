@@ -10,30 +10,38 @@
     <string name="restart_broadcast_sent">Restart broadcast sent</string>
     <string name="activity_about">About Android N-ify</string>
     <string name="about_author">Developed by \"MrWasdennnoch\"</string>
-    <string name="about_translator">Translated by @MrWasdennnoch</string> <!-- Insert your (preferably) XDA username here -->
     <string name="about_version">Version %1$s (%2$d)</string>
 
     <!-- prefs -->
     <string name="prefs_file_not_readable">The preference file isn\'t readable by Xposed, default values will be used in hooks. This could be due to enforcing SELinux.</string>
 
-    <string name="header_tweaks">Tweaks</string>
+    <string name="header_settings">Settings</string>
+    <string name="header_recents">Recents</string>
+    <string name="header_notifications">Notifications</string>
     <string name="header_app">App</string>
+
+    <string name="enable_settings">Enable settings tweaks</string>
+    <string name="fix_sound_notif_tile_title">Fix "Sound &amp; notification" tile</string>
+    <string name="fix_sound_notif_tile">Some ROMs combine the Sounds- and Notifications tile. Enable to set the proper summary for this tile</string>
+
+    <string name="header_tweaks">Tweaks</string>
+
+    <string name="enable_recents">Enable recents tweaks</string>
+    <string name="double_tap_speed_title">Double tap speed</string>
+
+    <string name="enable_notifications">Enable notification tweaks</string>
+    <string name="enable_notifications_summ">After every change of those settings restart SystemUI</string>
+    <string name="notifications_dark_theme_title">Dark notification theme</string>
+    <string name="notifications_dark_theme">Dark notification background for users of specific layers themes</string>
 
     <string name="hide_launcher_icon_title">Hide launcher icon</string>
     <string name="hide_launcher_icon">May require launcher restart</string>
     <string name="debug_log_title">Debug log</string>
     <string name="debug_log">Warning: Log-flooding</string>
-
-    <string name="requires_android_version">Requires Android %1$s</string>
     <!-- /prefs -->
 
-    <!-- SETTINGS -->
-    <string name="header_settings">Settings</string>
-    <string name="enable_settings_summaries_title">Settings summaries</string>
-    <string name="enable_settings_summaries">Show the most important information directly in the dashboard</string>
-    <string name="fix_sound_notif_tile_title">Fix "Sound &amp; notification" tile</string>
-    <string name="fix_sound_notif_tile">Some ROMs combine the Sounds and Notifications tile. Enable to set the proper summary for this tile</string>
 
+    <!-- SETTINGS -->
     <string name="disconnected">Disconnected</string>
     <string name="disabled">Disabled</string>
     <string name="off">OFF</string>
@@ -56,63 +64,19 @@
     <!-- /SETTINGS -->
 
     <!-- RECENTS -->
-    <string name="header_recents">Recents</string>
-    <string name="enable_recents_double_tap_title">Double-tap app switch</string>
-    <string name="enable_recents_double_tap">Double tap the recents key to switch to the last used app</string>
-    <string name="double_tap_speed_title">Double tap speed</string>
-    <string name="enable_recents_navigation_title">Recent apps navigation</string>
-    <string name="enable_recents_navigation">Use the recents key to navigate through the recents</string>
-    <string name="recents_navigation_delay_title">Navigation delay</string>
-    <string name="recents_navigation_delay">Time until the selected app gets focused</string>
-    <string name="enable_large_recents">Large recent apps</string>
-    <string name="no_recents_image">Change \"no recents\" image</string>
-
-    <string name="no_previous_recents">No recent items</string>
+    <string name="no_previous_recents">No previous app</string>
+    <string name="enable_recents_double_tap">Double tap to switch to last app</string>
+    <string name="enable_large_recents">Enable large recent apps</string>
     <!-- /RECENTS -->
 
-    <!-- STATUS BAR HEADER -->
-    <string name="header_status_bar_header">Status bar header</string>
-    <string name="enable_notification_header">Style header</string>
-    <string name="notification_header_qs_tiles_count">QS tiles to show</string>
-    <string name="notification_header_qs_tiles_count_monitor">tiles</string>
-    <string name="enable_new_tile_click_behavior">Android N tile click behavior</string>
-    <string name="enable_new_tile_click_behavior_summary">Clicking a tile in header will toggle it and clicking a tile in the panel will expand it</string>
-    <string name="enable_large_first_row">Enlarge first row</string>
-    <string name="hide_tuner_icon_title">Hide SystemUI Tuner icon</string>
-    <string name="hide_edit_tiles_title">Hide edit tiles button</string>
-    <string name="smaller_header_clock_title">Smaller clock</string>
-    <string name="smaller_header_clock">Lower the text size of the clock in the expanded header. Useful for small screens</string>
+    <!-- NOTIFICATIONS -->
+    <string name="notifications_change_style">Notifications with N style</string>
+    <string name="notification_allow_load_label_with_pm_title">Allow loading application name with PackageManager</string>
+    <string name="notification_allow_load_label_with_pm">May cause performance issues</string>
     <string name="notification_full_width_volume_title">Full width volume dialog</string>
     <string name="notification_full_width_volume">Remove volume dialog width limit for phones with large display</string>
-    <!-- /STATUS BAR HEADER -->
-
-    <!-- NOTIFICATIONS -->
-    <string name="header_notifications">Notifications</string>
-    <string name="notifications_change_style">Style Notifications</string>
-    <string name="notifications_dark_theme_title">Dark notification theme</string>
-    <string name="notifications_dark_theme">Dark notification background for users of specific layers themes</string>
     <string name="notification_dismiss_button_title">Change dismiss button</string>
     <string name="notification_dismiss_button">Show \"CLEAR ALL\" instead of dismiss icon</string>
-    <string name="notification_allow_load_label_with_pm_title">Alternative app name loading method</string>
-    <string name="notification_allow_load_label_with_pm">Allow loading application name with PackageManager. May cause performance issues</string>
-    <string name="action_search">Search</string>
-    <string name="notification_blacklisted_apps_title">Blacklisted apps</string>
-    <string name="notification_blacklisted_apps">Use old notification style for these apps</string>
     <!-- /NOTIFICATIONS -->
-
-    <!-- UPDATE -->
-    <string name="update_notification_title">New update available</string>
-    <string name="update_notification">Build %1$d is now available to update!</string>
-    <string name="update_notification_download">Update</string>
-    <string name="check_for_updates_title">Check for updates</string>
-    <string name="check_for_updates">Check for updates on app start</string>
-    <string name="checking_for_update">Checking for updates…</string>
-    <string name="check_for_update_fail">Couldn\'t check for updates</string>
-    <string name="no_updates">No newer versions found</string>
-    <string name="update_notification_downloading">Downloading update</string>
-    <string name="update_notification_downloading_details">Downloading build %1$d</string>
-    <string name="update_notification_download_fail">Download failed</string>
-    <string name="update_notification_download_fail_details">Failed to download build %1$d</string>
-    <!-- /UPDATE -->
 
 </resources>
